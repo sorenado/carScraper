@@ -9,18 +9,25 @@
     <!-- Ensure the correct path to your CSS file -->
 
     <!-- Font Information -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Alata&family=Poppins&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Alata&family=Poppins&display=swap"
+      rel="stylesheet"
+    />
   </head>
   <body>
     <div class="header">
-      <div class="header-title">Car Scraper</div>
+      <a id="title" href="/"><div class="header-title">Car Scraper</div></a>
       <div class="header-sections">
         <a onclick="scrollToElement('about')" class="header-section">About</a>
-        <a onclick="scrollToElement('contact')" class="header-section">Contact</a>
+        <a onclick="scrollToElement('contact')" class="header-section"
+          >Contact</a
+        >
         <a onclick="openLogin()" class="header-section">Log In</a>
-        <a onclick="openSignUp()" id="signupBtn" class="header-section">Sign Up</a>
+        <a onclick="openSignUp()" id="signupBtn" class="header-section"
+          >Sign Up</a
+        >
         <a id="signoutBtn" class="header-section">Sign Out</a>
       </div>
     </div>
@@ -44,8 +51,8 @@
             placeholder="Password"
             required
           />
-          
-          <input type="checkbox" id="rememberMe">
+
+          <input type="checkbox" id="rememberMe" />
           <label for="rememberMe">Remember Me</label>
 
           <div id="fieldIssuesLogin"></div>
@@ -101,11 +108,29 @@
 
     <h2 id="about" class="homepage-subtitle">About Us</h2>
     <h3 class="homepage-header">What is Car Scraper?</h3>
-    <p class="homepage-paragraph">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Dictumst quisque sagittis purus sit amet volutpat consequat mauris nunc. Tristique nulla aliquet enim tortor at auctor. Ultricies integer quis auctor elit sed vulputate mi. Hendrerit dolor magna eget est lorem ipsum dolor. Natoque penatibus et magnis dis. Etiam erat velit scelerisque in. Posuere morbi leo urna molestie at elementum eu facilisis. Id interdum velit laoreet id donec ultrices tincidunt. Donec adipiscing tristique risus nec.</p>
-    
+    <p class="homepage-paragraph">
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+      tempor incididunt ut labore et dolore magna aliqua. Dictumst quisque
+      sagittis purus sit amet volutpat consequat mauris nunc. Tristique nulla
+      aliquet enim tortor at auctor. Ultricies integer quis auctor elit sed
+      vulputate mi. Hendrerit dolor magna eget est lorem ipsum dolor. Natoque
+      penatibus et magnis dis. Etiam erat velit scelerisque in. Posuere morbi
+      leo urna molestie at elementum eu facilisis. Id interdum velit laoreet id
+      donec ultrices tincidunt. Donec adipiscing tristique risus nec.
+    </p>
+
     <h2 id="contact" class="homepage-subtitle">Contact Us</h2>
     <h3 class="homepage-header">Questions or Concerns?</h3>
-    <p class="homepage-paragraph">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Dictumst quisque sagittis purus sit amet volutpat consequat mauris nunc. Tristique nulla aliquet enim tortor at auctor. Ultricies integer quis auctor elit sed vulputate mi. Hendrerit dolor magna eget est lorem ipsum dolor. Natoque penatibus et magnis dis. Etiam erat velit scelerisque in. Posuere morbi leo urna molestie at elementum eu facilisis. Id interdum velit laoreet id donec ultrices tincidunt. Donec adipiscing tristique risus nec.</p>
+    <p class="homepage-paragraph">
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+      tempor incididunt ut labore et dolore magna aliqua. Dictumst quisque
+      sagittis purus sit amet volutpat consequat mauris nunc. Tristique nulla
+      aliquet enim tortor at auctor. Ultricies integer quis auctor elit sed
+      vulputate mi. Hendrerit dolor magna eget est lorem ipsum dolor. Natoque
+      penatibus et magnis dis. Etiam erat velit scelerisque in. Posuere morbi
+      leo urna molestie at elementum eu facilisis. Id interdum velit laoreet id
+      donec ultrices tincidunt. Donec adipiscing tristique risus nec.
+    </p>
 
     <script src="homepage.js"></script>
   </body>
