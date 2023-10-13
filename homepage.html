@@ -22,25 +22,13 @@
       <div class="header-sections">
         <a class="header-section">About</a>
         <a class="header-section">Contact</a>
-        <a onclick="openLogin()" class="header-section">Join</a>
         <a onclick="openLogin()" class="header-section">Log In</a>
+        <a onclick="openSignUp()" class="header-section">Sign Up</a>
       </div>
     </div>
     <div class="login-window">
       <a id="login-exitbtn" onclick="closeLogin()"><button>X</button></a>
       <div class="login-window-content">
-        <input
-          onchange="changeToLogin()"
-          type="radio"
-          id="login"
-          name="auth"
-          checked
-        />
-        <label for="login">Login</label>
-
-        <input onchange="changeToJoin()" type="radio" id="signup" name="auth" />
-        <label for="signup">Sign Up</label>
-
         <form id="login-form">
           <h2>Login</h2>
           <input type="email" placeholder="Email" required />
@@ -74,65 +62,9 @@
             name="password"
             required
           />
-
+          <div id="fieldIssues"></div>
           <!-- Specify the type attribute for the button to prevent accidental form submission -->
           <button id="signup-submit" type="submit">Submit</button>
-        </form>
-        <form id="verify-form">
-          <h2>Verify your Account</h2>
-          <div id="verify-form-code">
-            <input
-              type="number"
-              class="code"
-              placeholder="0"
-              min="0"
-              max="0"
-              required
-            />
-            <input
-              type="number"
-              class="code"
-              placeholder="0"
-              min="0"
-              max="0"
-              required
-            />
-            <input
-              type="number"
-              class="code"
-              placeholder="0"
-              min="0"
-              max="0"
-              required
-            />
-            <input
-              type="number"
-              class="code"
-              placeholder="0"
-              min="0"
-              max="0"
-              required
-            />
-            <input
-              type="number"
-              class="code"
-              placeholder="0"
-              min="0"
-              max="0"
-              required
-            />
-            <input
-              type="number"
-              class="code"
-              placeholder="0"
-              min="0"
-              max="0"
-              required
-            />
-          </div>
-          <button type="button" id="verify-btn" class="btn btn-primary">
-            Verify
-          </button>
         </form>
       </div>
     </div>
