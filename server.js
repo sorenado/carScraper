@@ -1,14 +1,14 @@
-const express = require("express"); //For routes and such
-const { MongoClient, ObjectId } = require("mongodb"); // For connecting to DB
-const crypto = require("crypto"); //For Hashing Passwords
-const { sendConfirmation, hashStringToBase64 } = require("./helperFunctions"); // Sending Confirmation email returns the confirmation code sent
+const express = require("express");
+const { MongoClient, ObjectId } = require("mongodb");
+const crypto = require("crypto");
+const { sendConfirmation, hashStringToBase64 } = require("./helperFunctions");
+const session = require("express-session");
+const MongoDBStore = require("connect-mongodb-session")(session);
+
 const app = express();
 const port = 8080;
 const dbURL =
   "mongodb://127.0.0.1:27017/?directConnection=true&serverSelectionTimeoutMS=2000&appName=mongosh+2.0.1";
-app.use(express.static("public"));
-
-const userEmail = "";
 
 async function connectToDB() {
   const client = new MongoClient(dbURL);
@@ -22,11 +22,33 @@ async function connectToDB() {
   }
 }
 
+const store = new MongoDBStore({
+  uri: dbURL,
+  collection: "sessions",
+});
+
+store.on("error", function (error) {
+  console.log(error);
+});
+
+app.use(
+  session({
+    secret: "your-secret-key",
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      maxAge: 3600000, // Session expiration time (1 hour)
+    },
+    store: store, // Use the MongoDBStore here
+  })
+);
+
+app.use(express.json());
+app.use(express.static("public"));
+
 app.get("/", (req, res) => {
   res.sendFile(__dirname + "/homepage.html");
 });
-
-app.use(express.json());
 
 app.post("/join-button-form", async (req, res) => {
   try {
@@ -41,7 +63,7 @@ app.post("/join-button-form", async (req, res) => {
 
     if (user) {
       console.log("User exists in the database:", user);
-      res.sendStatus(409); // If user already has an account
+      res.sendStatus(409); // If the user already has an account
       return; // Exit the function to prevent further execution
     }
 
@@ -106,9 +128,10 @@ app.get("/addedUsersPage", async (req, res) => {
 });
 
 app.post("/login-form", async (req, res) => {
-  const { email, password, rememberMe } = req.body;
-  console.log(rememberMe);
   try {
+    const { email, password } = req.body;
+    console.log(req.sessionID);
+
     const { db, client } = await connectToDB();
     const userCollection = db.collection("users");
 
@@ -123,6 +146,11 @@ app.post("/login-form", async (req, res) => {
 
     if (userInfo.password === hashedInputPassword) {
       res.status(200).json({ message: "Password Matched" });
+      req.session.authenticated = true;
+      req.session.user = {
+        email,
+      };
+      console.log(req.session);
     } else {
       res.status(401).json({ message: "Incorrect password" });
     }
@@ -132,4 +160,4 @@ app.post("/login-form", async (req, res) => {
   }
 });
 
-app.listen(port, () => console.log(`Succesfully running on Port: ${port}`));
+app.listen(port, () => console.log(`Successfully running on Port: ${port}`));
