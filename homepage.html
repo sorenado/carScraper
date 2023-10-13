@@ -31,12 +31,11 @@
     <div class="login-window">
       <a id="login-exitbtn" onclick="closeLogin()"><button>X</button></a>
       <div class="login-window-content">
-        <form id="login-form">
+        <form id="login-form" action="login-form" method="post">
           <h2 class="popupTitle">Login</h2>
-          <input type="email" placeholder="Email" class="inputField" required />
-          <input type="password" placeholder="Password" class="inputField" required />
-          <div id="x"></div>
-          <button id="login-submit" class="submitBtn" type="submit">Login</button>
+          <input type="email" placeholder="Email" required />
+          <input type="password" placeholder="Password" required />
+          <button id="login-submit" type="submit">Submit</button>
         </form>
 
         <form id="signup-form" action="join-button-form" method="post">
@@ -68,12 +67,15 @@
             name="password"
             required
           />
-          <div id="fieldIssues"></div>
+          <div id="fieldIssuesSignUp"></div>
           <!-- Specify the type attribute for the button to prevent accidental form submission -->
           <button id="signup-submit" class="submitBtn" type="submit">Sign Up</button>
         </form>
         <div id="verifyPopup">
-          <h3>Please check your email to complete verifying your account. You should recieve a link shortly.</h3>
+          <h3>
+            Please check your email to complete verifying your account. You
+            should recieve a link shortly.
+          </h3>
           <h5>This tab can be safely closed.</h5>
         </div>
       </div>

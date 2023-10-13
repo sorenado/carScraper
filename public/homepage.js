@@ -2,7 +2,8 @@
 
 let loginForm = document.getElementById("login-form");
 let signupForm = document.getElementById("signup-form");
-const fieldIssuesDiv = document.getElementById('fieldIssues');
+const fieldIssuesSignUpDiv = document.getElementById("fieldIssuesSignUp");
+const fieldIssuesLoginDiv = document.getElementById("fieldIssuesLogin");
 
 function toggleForm() {
   loginForm.style.display =
@@ -77,11 +78,10 @@ document.addEventListener('click', function(event) {
 const signUpSubmissionBtn = document.getElementById("signup-submit");
 signUpSubmissionBtn.addEventListener("click", function (event) {
   event.preventDefault(); // Prevent the default form submission
-  
+
   const name = document.getElementById("signup-form-name").value;
   const email = document.getElementById("signup-form-email").value;
   const password = document.getElementById("signup-form-password").value;
-
 
   if (name.length < 1 || email.length < 1 || password.length < 1) {
     fieldIssuesDiv.innerHTML = "Please make sure that you have entered a value for your name, email, and password."
@@ -92,14 +92,13 @@ signUpSubmissionBtn.addEventListener("click", function (event) {
     fieldIssuesDiv.innerHTML = ""
   }
 
-  if (fieldIssuesDiv.innerHTML === "" ) {
+  if (fieldIssuesSignUpDiv.innerHTML === "") {
     signUpSubmission(name, email, password);
   }
-
 });
 
 function signUpSubmission(name, email, password) {
-  console.log('ran function ')
+  console.log("ran function ");
   // Create a data object to send to the server
   const user = {
     name: name,
@@ -123,9 +122,9 @@ function signUpSubmission(name, email, password) {
       } else if (!response.ok) {
         throw new Error("An error occurred. Please try again later.");
       }
-    
+
       // Return the response as text
-      return response.text(); 
+      return response.text();
     })
     .then((data) => {
       if (data === "OK") {
@@ -144,11 +143,65 @@ function signUpSubmission(name, email, password) {
     });
 }
 
-
-
-
 function openVerifyPane() {
   document.getElementById("login-form").style.display = "none";
   document.getElementById("signup-form").style.display = "none";
   document.getElementById("verifyPopup").style.display = "block";
+}
+
+const loginSubmissionBtn = document.getElementById("login-submit");
+loginSubmissionBtn.addEventListener("click", function (event) {
+  event.preventDefault(); // Prevent the default form submission
+
+  const password = document.getElementById("login-password").value;
+  const email = document.getElementById("login-email").value;
+
+  if (email.length < 1 || password.length < 1) {
+    fieldIssuesLoginDiv.innerHTML =
+      "Please make sure that you have entered a value for your email and password.";
+    console.log("a field is empty");
+  }
+
+  if (email.length > 1 && password.length > 1) {
+    fieldIssuesLoginDiv.innerHTML = "";
+    console.log("field issues div made empty all fields are filled");
+  }
+
+  if (fieldIssuesLoginDiv.innerHTML === "") {
+    loginSubmission(email, password);
+    console.log("field issues div is empty, attempting to send submission");
+  }
+});
+
+function loginSubmission(email, password) {
+  const data = {
+    email: email,
+    password: password,
+  };
+
+  fetch("/login-form", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+  })
+    .then((response) => {
+      if (response.status === 200) {
+        // Successful login
+        fieldIssuesLoginDiv.innerHTML = "Login successful!";
+      } else if (response.status === 404) {
+        // User not found
+        fieldIssuesLoginDiv.innerHTML = "User not found";
+      } else if (response.status === 401) {
+        // Incorrect password
+        fieldIssuesLoginDiv.innerHTML = "Incorrect password. Please try again.";
+      }
+    })
+    .catch((error) => {
+      // Handle other errors
+      console.error(error);
+      fieldIssuesLoginDiv.innerHTML =
+        "An error occurred. Please try again later.";
+    });
 }
