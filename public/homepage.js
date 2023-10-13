@@ -1,228 +1,163 @@
-// Handle toggling of login/signup fourms
+const express = require("express");
+const { MongoClient, ObjectId } = require("mongodb");
+const crypto = require("crypto");
+const { sendConfirmation, hashStringToBase64 } = require("./helperFunctions");
+const session = require("express-session");
+const MongoDBStore = require("connect-mongodb-session")(session);
 
-let loginForm = document.getElementById("login-form");
-let signupForm = document.getElementById("signup-form");
-const fieldIssuesSignUpDiv = document.getElementById("fieldIssuesSignUp");
-const fieldIssuesLoginDiv = document.getElementById("fieldIssuesLogin");
+const app = express();
+const port = 8080;
+const dbURL =
+  "mongodb://127.0.0.1:27017/?directConnection=true&serverSelectionTimeoutMS=2000&appName=mongosh+2.0.1";
 
-function toggleForm() {
-  loginForm.style.display =
-    loginForm.style.display === "none" || loginForm.style.display === ""
-      ? "block"
-      : "none";
-  signupForm.style.display =
-    signupForm.style.display === "none" || signupForm.style.display === ""
-      ? "block"
-      : "none";
-}
-
-function applyOverlay() {
-  const body = document.querySelector('body');
-  const header = document.querySelector('header');
-
-  if (!body.classList.contains('overlay')) {
-    body.classList.add('overlay');
-    header.classList.add('overlay');
+async function connectToDB() {
+  const client = new MongoClient(dbURL);
+  try {
+    await client.connect();
+    console.log("Connected To Database");
+    const db = client.db("car_scraper");
+    return { db, client };
+  } catch (err) {
+    console.error(err);
   }
 }
 
-function removeOverlay() {
-  const body = document.querySelector('body');
-  const header = document.querySelector('header');
+const store = new MongoDBStore({
+  uri: dbURL,
+  collection: "sessions",
+});
 
-  if (body.classList.contains('overlay')) {
-    body.classList.remove('overlay');
-    header.classList.remove('overlay');
-  }
-}
+store.on("error", function (error) {
+  console.log(error);
+});
 
-function openLogin() {
-  document.getElementsByClassName("login-window")[0].style.display = "block";
-  document.getElementById("login-form").style.display = "block";
-  document.getElementById("signup-form").style.display = "none";
-  document.getElementById("verifyPopup").style.display = "none";
+app.use(
+  session({
+    secret: "your-secret-key",
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      maxAge: 3600000, // Session expiration time (1 hour)
+    },
+    store: store, // Use the MongoDBStore here
+  })
+);
 
-  applyOverlay();
-}
+app.use(express.json());
+app.use(express.static("public"));
 
-function openSignUp() {
-  document.getElementsByClassName("login-window")[0].style.display = "block";
-  document.getElementById("login-form").style.display = "none";
-  document.getElementById("signup-form").style.display = "block";
-  document.getElementById("verifyPopup").style.display = "none";
+app.get("/", (req, res) => {
+  res.sendFile(__dirname + "/homepage.html");
+});
 
-  applyOverlay();
-}
+app.post("/join-button-form", async (req, res) => {
+  try {
+    const { db, client } = await connectToDB();
+    const pendingUserCollection = db.collection("pendingUsers");
+    const usersCollection = db.collection("users");
 
-function closeLogin() {
-  document.getElementsByClassName("login-window")[0].style.display = "none";
+    const { name, email, password } = req.body;
+    console.log(name, email, password);
 
-  removeOverlay();
-}
+    const user = await usersCollection.findOne({ email: email });
 
-function shakeButton(btn) {
-  const button = document.getElementById(btn);
-  button.classList.add('shake-button');
-
-  button.addEventListener('animationend', () => {
-    button.classList.remove('shake-button');
-  });
-}
-
-function scrollToElement(elementId, offset = 300) {
-  const targetElement = document.getElementById(elementId);
-
-  if (targetElement) {
-    const scrollOptions = {
-      behavior: 'smooth'
-    };
-
-    const viewportHeight = window.innerHeight;
-
-    const elementRect = targetElement.getBoundingClientRect();
-    const elementTop = elementRect.top;
-
-    let scrollToPosition;
-
-    if (elementTop > 0) {
-      scrollToPosition = elementTop + window.scrollY - (viewportHeight / 2) + (elementRect.height / 2) + offset;
-    } else {
-      scrollToPosition = elementTop + window.scrollY - (viewportHeight / 2) + (elementRect.height / 2) + offset*3;
+    if (user) {
+      console.log("User exists in the database:", user);
+      res.sendStatus(409); // If the user already has an account
+      return; // Exit the function to prevent further execution
     }
 
-    window.scrollTo({ ...scrollOptions, top: scrollToPosition });
-  }
-}
+    const hashedPassword = await hashStringToBase64(password);
+    console.log(`HashedPassword: ${hashedPassword}`);
 
-const signUpSubmissionBtn = document.getElementById("signup-submit");
-signUpSubmissionBtn.addEventListener("click", function (event) {
-  event.preventDefault(); // Prevent the default form submission
+    const pendingUser = {
+      name: name,
+      email: email,
+      password: hashedPassword,
+    };
 
-  const name = document.getElementById("signup-form-name").value;
-  const email = document.getElementById("signup-form-email").value;
-  const password = document.getElementById("signup-form-password").value;
+    const result = await pendingUserCollection.insertOne(pendingUser);
+    const inputtedPendingUser = await pendingUserCollection.find({
+      email: email,
+    });
 
-  if (name.length < 1 || email.length < 1 || password.length < 1) {
-    fieldIssuesDiv.innerHTML = "Please make sure that you have entered a value for your name, email, and password."
-    shakeButton('signup-submit');
-  }
+    if (inputtedPendingUser) {
+      sendConfirmation(email, result.insertedId).catch((error) => {
+        res.sendStatus(500);
+        return; // Exit the function on error
+      });
+    }
 
-  if (name.length > 1 && email.length > 1 && password.length > 1) {
-    fieldIssuesDiv.innerHTML = ""
-  }
-
-  if (fieldIssuesSignUpDiv.innerHTML === "") {
-    signUpSubmission(name, email, password);
+    res.sendStatus(200);
+  } catch (error) {
+    console.error(error);
+    res.sendStatus(400);
   }
 });
 
-function signUpSubmission(name, email, password) {
-  console.log("ran function ");
-  // Create a data object to send to the server
-  const user = {
-    name: name,
-    email: email,
-    password: password,
-  };
+app.get("/addedUsersPage", async (req, res) => {
+  const objectId = req.query.objectid;
 
-  // Send the data to the server using the Fetch API
-  fetch("/join-button-form", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(user),
-  })
-    .then((response) => {
-      if (response.status === 409) {
-        fieldIssuesDiv.innerHTML = "An account with that email already exists. Please use a different email or <a onclick='openLogin()'>login</a>.";
-        shakeButton('signup-submit');
-        return Promise.reject(new Error("Account already exists"));
-      } else if (!response.ok) {
-        throw new Error("An error occurred. Please try again later.");
-      }
+  try {
+    const { db, client } = await connectToDB();
+    const userCollection = db.collection("users");
+    const pendingUserCollection = db.collection("pendingUsers");
+    const objectIdToQuery = new ObjectId(objectId);
 
-      // Return the response as text
-      return response.text();
-    })
-    .then((data) => {
-      if (data === "OK") {
-        console.log("User registered successfully.");
-        openVerifyPane();
-      } else {
-        // Handle the response data based on your requirements
-        console.log("Unexpected response:", data);
-      }
-    })
-    .catch((error) => {
-      // Handle errors, including 409 case
-      if (error.message !== "Account already exists") {
-        console.error("Error registering user:", error);
-      }
+    const pendingUser = await pendingUserCollection.findOne({
+      _id: objectIdToQuery,
     });
-}
+    const user = await userCollection.insertOne(pendingUser);
+    const deletePendingUser = await pendingUserCollection.deleteOne({
+      _id: objectIdToQuery,
+    });
 
-function openVerifyPane() {
-  document.getElementById("login-form").style.display = "none";
-  document.getElementById("signup-form").style.display = "none";
-  document.getElementById("verifyPopup").style.display = "block";
-}
-
-const loginSubmissionBtn = document.getElementById("login-submit");
-loginSubmissionBtn.addEventListener("click", function (event) {
-  event.preventDefault(); // Prevent the default form submission
-
-  const password = document.getElementById("login-password").value;
-  const email = document.getElementById("login-email").value;
-  const rememberMe = document.getElementById("rememberMe").checked;
-  if (email.length < 1 || password.length < 1) {
-    fieldIssuesLoginDiv.innerHTML =
-      "Please make sure that you have entered a value for your email and password.";
-    console.log("a field is empty");
-  }
-
-  if (email.length > 1 && password.length > 1) {
-    fieldIssuesLoginDiv.innerHTML = "";
-    console.log("field issues div made empty all fields are filled");
-  }
-
-  if (fieldIssuesLoginDiv.innerHTML === "") {
-    loginSubmission(email, password, rememberMe);
-    console.log("field issues div is empty, attempting to send submission");
+    if (deletePendingUser.deletedCount === 1) {
+      res.status(200).sendFile(__dirname + "/addedUsersPage.html");
+      console.log(
+        "Everything worked correctly in making the user and adding to the database"
+      );
+    } else {
+      res.status(500).sendFile(__dirname + "/addedUsersPage.html");
+      console.log("Deleted count was not 1 ");
+    }
+  } catch (err) {
+    console.error(err);
+    res.status(500).sendFile(__dirname + "/addedUsersPage.html");
   }
 });
 
-function loginSubmission(email, password, rememberMe) {
-  const data = {
-    email: email,
-    password: password,
-    rememberMe: rememberMe,
-  };
+app.post("/login-form", async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    console.log(req.sessionID);
 
+    const { db, client } = await connectToDB();
+    const userCollection = db.collection("users");
 
-  fetch("/login-form", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(data),
-  })
-    .then((response) => {
-      if (response.status === 200) {
-        // Successful login
-        fieldIssuesLoginDiv.innerHTML = "Login successful!";
-      } else if (response.status === 404) {
-        // User not found
-        fieldIssuesLoginDiv.innerHTML = "User not found";
-      } else if (response.status === 401) {
-        // Incorrect password
-        fieldIssuesLoginDiv.innerHTML = "Incorrect password. Please try again.";
-      }
-    })
-    .catch((error) => {
-      // Handle other errors
-      console.error(error);
-      fieldIssuesLoginDiv.innerHTML =
-        "An error occurred. Please try again later.";
-    });
-}
+    const userInfo = await userCollection.findOne({ email: email });
+
+    if (!userInfo) {
+      res.status(404).json({ message: "User not found" });
+      return;
+    }
+
+    const hashedInputPassword = await hashStringToBase64(password);
+
+    if (userInfo.password === hashedInputPassword) {
+      res.status(200).json({ message: "Password Matched" });
+      req.session.authenticated = true;
+      req.session.user = {
+        email,
+      };
+      console.log(req.session);
+    } else {
+      res.status(401).json({ message: "Incorrect password" });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+});
+
+app.listen(port, () => console.log(`Successfully running on Port: ${port}`));
