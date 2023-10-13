@@ -45,7 +45,8 @@ app.post("/join-button-form", async (req, res) => {
       return; // Exit the function to prevent further execution
     }
 
-    const hashedPassword = hashStringToBase64(password);
+    const hashedPassword = await hashStringToBase64(password);
+    console.log(`HashedPassword: ${hashedPassword}`);
 
     const pendingUser = {
       name: name,
@@ -101,6 +102,32 @@ app.get("/addedUsersPage", async (req, res) => {
   } catch (err) {
     console.error(err);
     res.status(500).sendFile(__dirname + "/addedUsersPage.html");
+  }
+});
+
+app.post("/login-form", async (req, res) => {
+  const { email, password } = req.body;
+  try {
+    const { db, client } = await connectToDB();
+    const userCollection = db.collection("users");
+
+    const userInfo = await userCollection.findOne({ email: email });
+
+    if (!userInfo) {
+      res.status(404).json({ message: "User not found" });
+      return;
+    }
+
+    const hashedInputPassword = await hashStringToBase64(password);
+
+    if (userInfo.password === hashedInputPassword) {
+      res.status(200).json({ message: "Password Matched" });
+    } else {
+      res.status(401).json({ message: "Incorrect password" });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal server error" });
   }
 });
 
