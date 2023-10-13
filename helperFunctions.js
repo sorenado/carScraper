@@ -1,6 +1,6 @@
 const nodemailer = require("nodemailer"); //Sending Email Conformations and car updates
 
-async function sendConfirmation(userEmail) {
+async function sendConfirmation(userEmail, objectID) {
   let transporter = nodemailer.createTransport({
     service: "gmail",
     auth: {
@@ -13,7 +13,7 @@ async function sendConfirmation(userEmail) {
     from: "ronshaked07@gmail.com",
     to: userEmail,
     subject: "Confirmation Email",
-    text: `Here is your confirmation code: ${confirmationCode}`,
+    text: `Click here to confirm your account: http://localhost:8080/addedUsersPage?objectid=${objectID}`,
   };
 
   transporter.sendMail(details, (error, info) => {
@@ -23,15 +23,7 @@ async function sendConfirmation(userEmail) {
       console.log("Email Sent:", info.response);
     }
   });
-
-  return confirmationCode;
 }
-
-function generateConfirmationCode() {
-  return Math.floor(100000 + Math.random() * 900000).toString();
-}
-
-const confirmationCode = generateConfirmationCode();
 
 async function hashStringToBase64(input) {
   // Convert the input string to an ArrayBuffer
