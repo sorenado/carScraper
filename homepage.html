@@ -31,9 +31,16 @@
       <div class="login-window-content">
         <form id="login-form" action="login-form" method="post">
           <h2>Login</h2>
-          <input id="login-email" type="email" placeholder="Email" required />
+          <input
+            id="login-email"
+            class="login-input"
+            type="email"
+            placeholder="Email"
+            required
+          />
           <input
             id="login-password"
+            class="login-input"
             type="password"
             placeholder="Password"
             required
@@ -41,7 +48,9 @@
 
           <div id="fieldIssuesLogin"></div>
 
-          <button id="login-submit" type="submit" class="submitBtn">Submit</button>
+          <button id="login-submit" type="submit" class="submitBtn">
+            Submit
+          </button>
         </form>
 
         <form id="signup-form" action="join-button-form" method="post">
@@ -72,7 +81,9 @@
           />
           <div id="fieldIssuesSignUp"></div>
           <!-- Specify the type attribute for the button to prevent accidental form submission -->
-          <button id="signup-submit" type="submit" class="submitBtn">Submit</button>
+          <button id="signup-submit" type="submit" class="submitBtn">
+            Submit
+          </button>
         </form>
         <div id="verifyPopup">
           <h3>
