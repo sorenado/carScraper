@@ -17,6 +17,8 @@
     />
   </head>
   <body>
+    <div id="overlay"></div>
+
     <div class="header">
       <div class="header-title">Car Scraper</div>
       <div class="header-sections">
@@ -30,19 +32,21 @@
       <a id="login-exitbtn" onclick="closeLogin()"><button>X</button></a>
       <div class="login-window-content">
         <form id="login-form">
-          <h2>Login</h2>
-          <input type="email" placeholder="Email" required />
-          <input type="password" placeholder="Password" required />
-          <button id="login-submit" type="submit">Submit</button>
+          <h2 class="popupTitle">Login</h2>
+          <input type="email" placeholder="Email" class="inputField" required />
+          <input type="password" placeholder="Password" class="inputField" required />
+          <div id="x"></div>
+          <button id="login-submit" class="submitBtn" type="submit">Login</button>
         </form>
 
         <form id="signup-form" action="join-button-form" method="post">
-          <h2>Create an Account</h2>
+          <h2 class="popupTitle">Sign Up</h2>
           <input
             id="signup-form-name"
             type="text"
             name="name"
             placeholder="Name"
+            class="inputField"
             required
           />
 
@@ -50,6 +54,7 @@
             id="signup-form-email"
             type="email"
             placeholder="Email"
+            class="inputField"
             name="email"
             required
           />
@@ -59,12 +64,13 @@
             id="signup-form-password"
             type="password"
             placeholder="Password"
+            class="inputField"
             name="password"
             required
           />
           <div id="fieldIssues"></div>
           <!-- Specify the type attribute for the button to prevent accidental form submission -->
-          <button id="signup-submit" type="submit">Submit</button>
+          <button id="signup-submit" class="submitBtn" type="submit">Sign Up</button>
         </form>
         <div id="verifyPopup">
           <h3>Please check your email to complete verifying your account. You should recieve a link shortly.</h3>

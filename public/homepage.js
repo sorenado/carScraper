@@ -15,11 +15,29 @@ function toggleForm() {
       : "none";
 }
 
+function applyOverlay() {
+  const body = document.querySelector('body');
+
+  if (!body.classList.contains('overlay')) {
+    body.classList.add('overlay');
+  }
+}
+
+function removeOverlay() {
+  const body = document.querySelector('body');
+
+  if (body.classList.contains('overlay')) {
+    body.classList.remove('overlay');
+  }
+}
+
 function openLogin() {
   document.getElementsByClassName("login-window")[0].style.display = "block";
   document.getElementById("login-form").style.display = "block";
   document.getElementById("signup-form").style.display = "none";
   document.getElementById("verifyPopup").style.display = "none";
+
+  applyOverlay();
 }
 
 function openSignUp() {
@@ -27,21 +45,34 @@ function openSignUp() {
   document.getElementById("login-form").style.display = "none";
   document.getElementById("signup-form").style.display = "block";
   document.getElementById("verifyPopup").style.display = "none";
+
+  applyOverlay();
 }
 
 function closeLogin() {
   document.getElementsByClassName("login-window")[0].style.display = "none";
+
+  removeOverlay();
 }
 
-function changeToLogin() {
-  document.getElementById("login-form").style.display = "block";
-  document.getElementById("signup-form").style.display = "none";
+function shakeButton(btn) {
+  const button = document.getElementById(btn);
+  button.classList.add('shake-button');
+
+  button.addEventListener('animationend', () => {
+    button.classList.remove('shake-button');
+  });
 }
 
-function changeToJoin() {
-  document.getElementById("login-form").style.display = "none";
-  document.getElementById("signup-form").style.display = "block";
-}
+document.addEventListener('click', function(event) {
+  const body = document.querySelector('body');
+  const overlay = document.getElementById('overlay');
+
+  if (event.target === overlay) {
+    popup.style.display = 'none';
+    body.classList.remove('overlay');
+  }
+});
 
 const signUpSubmissionBtn = document.getElementById("signup-submit");
 signUpSubmissionBtn.addEventListener("click", function (event) {
@@ -54,17 +85,15 @@ signUpSubmissionBtn.addEventListener("click", function (event) {
 
   if (name.length < 1 || email.length < 1 || password.length < 1) {
     fieldIssuesDiv.innerHTML = "Please make sure that you have entered a value for your name, email, and password."
-    console.log('a field is empty')
+    shakeButton('signup-submit');
   }
 
   if (name.length > 1 && email.length > 1 && password.length > 1) {
     fieldIssuesDiv.innerHTML = ""
-    console.log('field issues div made empty, all fields are filled')
   }
 
   if (fieldIssuesDiv.innerHTML === "" ) {
     signUpSubmission(name, email, password);
-    console.log('field issues div is empty, attempting to send submission')
   }
 
 });
@@ -89,7 +118,7 @@ function signUpSubmission(name, email, password) {
     .then((response) => {
       if (response.status === 409) {
         fieldIssuesDiv.innerHTML = "An account with that email already exists. Please use a different email or <a onclick='openLogin()'>login</a>.";
-        // Returning a rejected promise to skip the subsequent .then block
+        shakeButton('signup-submit');
         return Promise.reject(new Error("Account already exists"));
       } else if (!response.ok) {
         throw new Error("An error occurred. Please try again later.");
