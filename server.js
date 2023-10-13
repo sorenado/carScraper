@@ -106,7 +106,8 @@ app.get("/addedUsersPage", async (req, res) => {
 });
 
 app.post("/login-form", async (req, res) => {
-  const { email, password } = req.body;
+  const { email, password, rememberMe } = req.body;
+  console.log(rememberMe);
   try {
     const { db, client } = await connectToDB();
     const userCollection = db.collection("users");
