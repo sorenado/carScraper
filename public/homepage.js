@@ -2,6 +2,7 @@
 
 let loginForm = document.getElementById("login-form");
 let signupForm = document.getElementById("signup-form");
+const fieldIssuesDiv = document.getElementById('fieldIssues');
 
 function toggleForm() {
   loginForm.style.display =
@@ -45,16 +46,31 @@ function changeToJoin() {
 const signUpSubmissionBtn = document.getElementById("signup-submit");
 signUpSubmissionBtn.addEventListener("click", function (event) {
   event.preventDefault(); // Prevent the default form submission
-  signUpSubmission();
-  openVerifyPane();
-});
-
-function signUpSubmission() {
-  // Get references to the form elements
+  
   const name = document.getElementById("signup-form-name").value;
   const email = document.getElementById("signup-form-email").value;
   const password = document.getElementById("signup-form-password").value;
 
+
+  if (name.length < 1 || email.length < 1 || password.length < 1) {
+    fieldIssuesDiv.innerHTML = "Please make sure that you have entered a value for your name, email, and password."
+    console.log('a field is empty')
+  }
+
+  if (name.length > 1 && email.length > 1 && password.length > 1) {
+    fieldIssuesDiv.innerHTML = ""
+    console.log('field issues div made empty, all fields are filled')
+  }
+
+  if (fieldIssuesDiv.innerHTML === "" ) {
+    signUpSubmission(name, email, password);
+    console.log('field issues div is empty, attempting to send submission')
+  }
+
+});
+
+function signUpSubmission(name, email, password) {
+  console.log('ran function ')
   // Create a data object to send to the server
   const user = {
     name: name,
@@ -70,16 +86,36 @@ function signUpSubmission() {
     },
     body: JSON.stringify(user),
   })
-    .then((response) => response.json())
+    .then((response) => {
+      if (response.status === 409) {
+        fieldIssuesDiv.innerHTML = "An account with that email already exists. Please use a different email or <a onclick='openLogin()'>login</a>.";
+        // Returning a rejected promise to skip the subsequent .then block
+        return Promise.reject(new Error("Account already exists"));
+      } else if (!response.ok) {
+        throw new Error("An error occurred. Please try again later.");
+      }
+    
+      // Return the response as text
+      return response.text(); 
+    })
     .then((data) => {
-      console.log("User registered successfully:", data);
-      // You can handle the server's response here
+      if (data === "OK") {
+        console.log("User registered successfully.");
+        openVerifyPane();
+      } else {
+        // Handle the response data based on your requirements
+        console.log("Unexpected response:", data);
+      }
     })
     .catch((error) => {
-      console.error("Error registering user:", error);
-      // Handle any errors that occur during the fetch
+      // Handle errors, including 409 case
+      if (error.message !== "Account already exists") {
+        console.error("Error registering user:", error);
+      }
     });
 }
+
+
 
 
 function openVerifyPane() {
