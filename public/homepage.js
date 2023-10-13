@@ -18,17 +18,21 @@ function toggleForm() {
 
 function applyOverlay() {
   const body = document.querySelector('body');
+  const header = document.querySelector('header');
 
   if (!body.classList.contains('overlay')) {
     body.classList.add('overlay');
+    header.classList.add('overlay');
   }
 }
 
 function removeOverlay() {
   const body = document.querySelector('body');
+  const header = document.querySelector('header');
 
   if (body.classList.contains('overlay')) {
     body.classList.remove('overlay');
+    header.classList.remove('overlay');
   }
 }
 
@@ -65,15 +69,30 @@ function shakeButton(btn) {
   });
 }
 
-document.addEventListener('click', function(event) {
-  const body = document.querySelector('body');
-  const overlay = document.getElementById('overlay');
+function scrollToElement(elementId, offset = 300) {
+  const targetElement = document.getElementById(elementId);
 
-  if (event.target === overlay) {
-    popup.style.display = 'none';
-    body.classList.remove('overlay');
+  if (targetElement) {
+    const scrollOptions = {
+      behavior: 'smooth'
+    };
+
+    const viewportHeight = window.innerHeight;
+
+    const elementRect = targetElement.getBoundingClientRect();
+    const elementTop = elementRect.top;
+
+    let scrollToPosition;
+
+    if (elementTop > 0) {
+      scrollToPosition = elementTop + window.scrollY - (viewportHeight / 2) + (elementRect.height / 2) + offset;
+    } else {
+      scrollToPosition = elementTop + window.scrollY - (viewportHeight / 2) + (elementRect.height / 2) + offset*3;
+    }
+
+    window.scrollTo({ ...scrollOptions, top: scrollToPosition });
   }
-});
+}
 
 const signUpSubmissionBtn = document.getElementById("signup-submit");
 signUpSubmissionBtn.addEventListener("click", function (event) {
@@ -155,7 +174,7 @@ loginSubmissionBtn.addEventListener("click", function (event) {
 
   const password = document.getElementById("login-password").value;
   const email = document.getElementById("login-email").value;
-
+  const rememberMe = document.getElementById("rememberMe").checked;
   if (email.length < 1 || password.length < 1) {
     fieldIssuesLoginDiv.innerHTML =
       "Please make sure that you have entered a value for your email and password.";
@@ -168,16 +187,18 @@ loginSubmissionBtn.addEventListener("click", function (event) {
   }
 
   if (fieldIssuesLoginDiv.innerHTML === "") {
-    loginSubmission(email, password);
+    loginSubmission(email, password, rememberMe);
     console.log("field issues div is empty, attempting to send submission");
   }
 });
 
-function loginSubmission(email, password) {
+function loginSubmission(email, password, rememberMe) {
   const data = {
     email: email,
     password: password,
+    rememberMe: rememberMe,
   };
+
 
   fetch("/login-form", {
     method: "POST",
