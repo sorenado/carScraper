@@ -85,3 +85,7 @@ myRadio2 --> signup */
     justify-content: center;
     text-align: center;
 }
+
+#verifyPopup {
+    display: none;
+}

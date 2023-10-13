@@ -16,6 +16,16 @@ function toggleForm() {
 
 function openLogin() {
   document.getElementsByClassName("login-window")[0].style.display = "block";
+  document.getElementById("login-form").style.display = "block";
+  document.getElementById("signup-form").style.display = "none";
+  document.getElementById("verifyPopup").style.display = "none";
+}
+
+function openSignUp() {
+  document.getElementsByClassName("login-window")[0].style.display = "block";
+  document.getElementById("login-form").style.display = "none";
+  document.getElementById("signup-form").style.display = "block";
+  document.getElementById("verifyPopup").style.display = "none";
 }
 
 function closeLogin() {
@@ -36,6 +46,7 @@ const signUpSubmissionBtn = document.getElementById("signup-submit");
 signUpSubmissionBtn.addEventListener("click", function (event) {
   event.preventDefault(); // Prevent the default form submission
   signUpSubmission();
+  openVerifyPane();
 });
 
 function signUpSubmission() {
@@ -68,4 +79,11 @@ function signUpSubmission() {
       console.error("Error registering user:", error);
       // Handle any errors that occur during the fetch
     });
+}
+
+
+function openVerifyPane() {
+  document.getElementById("login-form").style.display = "none";
+  document.getElementById("signup-form").style.display = "none";
+  document.getElementById("verifyPopup").style.display = "block";
 }
