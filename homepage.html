@@ -21,13 +21,9 @@
       <a id="title" href="/"><div class="header-title">Car Scraper</div></a>
       <div class="header-sections">
         <a onclick="scrollToElement('about')" class="header-section">About</a>
-        <a onclick="scrollToElement('contact')" class="header-section"
-          >Contact</a
-        >
+        <a onclick="scrollToElement('contact')" class="header-section">Contact</a>
         <a onclick="openLogin()" class="header-section">Log In</a>
-        <a onclick="openSignUp()" id="signupBtn" class="header-section"
-          >Sign Up</a
-        >
+        <a onclick="openSignUp()" id="signupBtn" class="header-section">Sign Up</a>
         <a id="signoutBtn" class="header-section">Sign Out</a>
       </div>
     </div>
@@ -35,32 +31,6 @@
     <div class="login-window">
       <a id="login-exitbtn" onclick="closeLogin()"><button>X</button></a>
       <div class="login-window-content">
-        <form id="login-form" action="login-form" method="post">
-          <h2>Login</h2>
-          <input
-            id="login-email"
-            class="login-input"
-            type="email"
-            placeholder="Email"
-            required
-          />
-          <input
-            id="login-password"
-            class="login-input"
-            type="password"
-            placeholder="Password"
-            required
-          />
-
-          <input type="checkbox" id="rememberMe">
-          <label for="rememberMe">Remember Me</label>
-
-          <button id="login-submit" type="submit" class="submitBtn">Login</button>
-
-          <h3 class="switchTypeTitle">Don't have an account? <a class="switchType" onclick="openSignUp()">Sign Up</a></h3>
-          <div id="fieldIssuesLoginDiv"></div>
-
-        </form>
 
         <form id="signup-form" action="join-button-form" method="post">
           <h2>Create an Account</h2>
@@ -94,6 +64,34 @@
           <h3 class="switchTypeTitle">Already have an account? <a class="switchType" onclick="openLogin()">Login</a></h3>
           <div id="fieldIssuesSignUp"></div>
         </form>
+
+        <form id="login-form" action="login-form" method="post">
+          <h2>Login</h2>
+          <input
+            id="login-email"
+            class="login-input"
+            type="email"
+            placeholder="Email"
+            required
+          />
+          <input
+            id="login-password"
+            class="login-input"
+            type="password"
+            placeholder="Password"
+            required
+          />
+
+          <input type="checkbox" id="rememberMe">
+          <label for="rememberMe">Remember Me</label>
+
+          <button id="login-submit" type="submit" class="submitBtn">Login</button>
+
+          <h3 class="switchTypeTitle">Don't have an account? <a class="switchType" onclick="openSignUp()">Sign Up</a></h3>
+          <div id="fieldIssuesLoginDiv"></div>
+
+        </form>
+
         <div id="verifyPopup">
           <h3>
             Please check your email to complete verifying your account. You

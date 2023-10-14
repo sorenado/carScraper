@@ -6,15 +6,37 @@ let fieldIssuesSignUpDiv = document.getElementById("fieldIssuesSignUp");
 let fieldIssuesLoginDiv = document.getElementById("fieldIssuesLoginDiv");
 
 
-function toggleForm() {
-  loginForm.style.display =
-    loginForm.style.display === "none" || loginForm.style.display === ""
-      ? "block"
-      : "none";
-  signupForm.style.display =
-    signupForm.style.display === "none" || signupForm.style.display === ""
-      ? "block"
-      : "none";
+function scrollToElement(elementId) {
+  const targetElement = document.getElementById(elementId);
+
+  let offset = 0;
+
+  if (elementId === "login-form" || targetElement === "signup-form") {
+    offset = 0;
+  } else {
+    offset = 300;
+  }
+
+  if (targetElement) {
+    const scrollOptions = {
+      behavior: 'smooth'
+    };
+
+    const viewportHeight = window.innerHeight;
+
+    const elementRect = targetElement.getBoundingClientRect();
+    const elementTop = elementRect.top;
+
+    let scrollToPosition;
+
+    if (elementTop > 0) {
+      scrollToPosition = elementTop + window.scrollY - (viewportHeight / 2) + (elementRect.height / 2) + offset;
+    } else {
+      scrollToPosition = elementTop + window.scrollY - (viewportHeight / 2) + (elementRect.height / 2) + offset*3;
+    }
+
+    window.scrollTo({ ...scrollOptions, top: scrollToPosition });
+  }
 }
 
 function applyOverlay() {
@@ -43,6 +65,9 @@ function openLogin() {
   document.getElementById("signup-form").style.display = "none";
   document.getElementById("verifyPopup").style.display = "none";
 
+  const scrollTop = window.scrollY || document.documentElement.scrollTop;
+  document.getElementsByClassName("login-window")[0].style.top = scrollTop + window.innerHeight / 2 + "px";
+
   applyOverlay();
 }
 
@@ -51,6 +76,9 @@ function openSignUp() {
   document.getElementById("login-form").style.display = "none";
   document.getElementById("signup-form").style.display = "block";
   document.getElementById("verifyPopup").style.display = "none";
+
+  const scrollTop = window.scrollY || document.documentElement.scrollTop;
+  document.getElementsByClassName("login-window")[0].style.top = scrollTop + window.innerHeight / 2 + "px";
 
   applyOverlay();
 }
@@ -68,31 +96,6 @@ function shakeButton(btn) {
   button.addEventListener('animationend', () => {
     button.classList.remove('shake-button');
   });
-}
-
-function scrollToElement(elementId, offset = 300) {
-  const targetElement = document.getElementById(elementId);
-
-  if (targetElement) {
-    const scrollOptions = {
-      behavior: 'smooth'
-    };
-
-    const viewportHeight = window.innerHeight;
-
-    const elementRect = targetElement.getBoundingClientRect();
-    const elementTop = elementRect.top;
-
-    let scrollToPosition;
-
-    if (elementTop > 0) {
-      scrollToPosition = elementTop + window.scrollY - (viewportHeight / 2) + (elementRect.height / 2) + offset;
-    } else {
-      scrollToPosition = elementTop + window.scrollY - (viewportHeight / 2) + (elementRect.height / 2) + offset*3;
-    }
-
-    window.scrollTo({ ...scrollOptions, top: scrollToPosition });
-  }
 }
 
 const signUpSubmissionBtn = document.getElementById("signup-submit");
