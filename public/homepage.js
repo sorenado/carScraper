@@ -5,7 +5,6 @@ let signupForm = document.getElementById("signup-form");
 let fieldIssuesSignUpDiv = document.getElementById("fieldIssuesSignUp");
 let fieldIssuesLoginDiv = document.getElementById("fieldIssuesLoginDiv");
 
-
 function scrollToElement(elementId) {
   const targetElement = document.getElementById(elementId);
 
@@ -19,7 +18,7 @@ function scrollToElement(elementId) {
 
   if (targetElement) {
     const scrollOptions = {
-      behavior: 'smooth'
+      behavior: "smooth",
     };
 
     const viewportHeight = window.innerHeight;
@@ -30,9 +29,19 @@ function scrollToElement(elementId) {
     let scrollToPosition;
 
     if (elementTop > 0) {
-      scrollToPosition = elementTop + window.scrollY - (viewportHeight / 2) + (elementRect.height / 2) + offset;
+      scrollToPosition =
+        elementTop +
+        window.scrollY -
+        viewportHeight / 2 +
+        elementRect.height / 2 +
+        offset;
     } else {
-      scrollToPosition = elementTop + window.scrollY - (viewportHeight / 2) + (elementRect.height / 2) + offset*3;
+      scrollToPosition =
+        elementTop +
+        window.scrollY -
+        viewportHeight / 2 +
+        elementRect.height / 2 +
+        offset * 3;
     }
 
     window.scrollTo({ ...scrollOptions, top: scrollToPosition });
@@ -42,36 +51,36 @@ function scrollToElement(elementId) {
 function enableScroll() {
   const scrollPosition = parseInt(document.body.style.top, 10);
 
-  document.body.style.position = '';
-  document.body.style.top = '';
+  document.body.style.position = "";
+  document.body.style.top = "";
 
   window.scrollTo(0, scrollPosition);
 }
 
 function disableScroll() {
-  const scrollPosition = window.pageYOffset || document.documentElement.scrollTop;
+  const scrollPosition =
+    window.pageYOffset || document.documentElement.scrollTop;
 
-  document.body.style.position = 'fixed';
+  document.body.style.position = "fixed";
   document.body.style.top = `-${scrollPosition}px`;
 }
 
-
 function applyOverlay() {
-  const body = document.querySelector('body');
-  const header = document.querySelector('header');
+  const body = document.querySelector("body");
+  const header = document.querySelector("header");
 
-  if (!body.classList.contains('overlay')) {
-    body.classList.add('overlay');
+  if (!body.classList.contains("overlay")) {
+    body.classList.add("overlay");
     // header.classList.add('overlay');
   }
 }
 
 function removeOverlay() {
-  const body = document.querySelector('body');
-  const header = document.querySelector('header');
+  const body = document.querySelector("body");
+  const header = document.querySelector("header");
 
-  if (body.classList.contains('overlay')) {
-    body.classList.remove('overlay');
+  if (body.classList.contains("overlay")) {
+    body.classList.remove("overlay");
     // header.classList.remove('overlay');
   }
 }
@@ -83,7 +92,8 @@ function openLogin() {
   document.getElementById("verifyPopup").style.display = "none";
 
   const scrollTop = window.scrollY || document.documentElement.scrollTop;
-  document.getElementsByClassName("login-window")[0].style.top = scrollTop + window.innerHeight / 2 + "px";
+  document.getElementsByClassName("login-window")[0].style.top =
+    scrollTop + window.innerHeight / 2 + "px";
 
   applyOverlay();
   disableScroll();
@@ -96,7 +106,8 @@ function openSignUp() {
   document.getElementById("verifyPopup").style.display = "none";
 
   const scrollTop = window.scrollY || document.documentElement.scrollTop;
-  document.getElementsByClassName("login-window")[0].style.top = scrollTop + window.innerHeight / 2 + "px";
+  document.getElementsByClassName("login-window")[0].style.top =
+    scrollTop + window.innerHeight / 2 + "px";
 
   applyOverlay();
   disableScroll();
@@ -111,10 +122,10 @@ function closeLogin() {
 
 function shakeButton(btn) {
   const button = document.getElementById(btn);
-  button.classList.add('shake-button');
+  button.classList.add("shake-button");
 
-  button.addEventListener('animationend', () => {
-    button.classList.remove('shake-button');
+  button.addEventListener("animationend", () => {
+    button.classList.remove("shake-button");
   });
 }
 
@@ -127,13 +138,19 @@ signUpSubmissionBtn.addEventListener("click", function (event) {
   const password = document.getElementById("signup-form-password").value;
 
   if (name.length < 1 || email.length < 1 || password.length < 1) {
-    fieldIssuesSignUpDiv.innerHTML = "Please make sure that you have entered a value for your name, email, and password."
-    shakeButton('signup-submit');
+    fieldIssuesSignUpDiv.innerHTML =
+      "Please make sure that you have entered a value for your name, email, and password.";
+    shakeButton("signup-submit");
   } else {
-    fieldIssuesSignUpDiv.innerHTML = ""
+    fieldIssuesSignUpDiv.innerHTML = "";
   }
 
-  if (fieldIssuesSignUpDiv.innerHTML === "" && name.length > 1 && email.length > 1 && password.length > 1) {
+  if (
+    fieldIssuesSignUpDiv.innerHTML === "" &&
+    name.length > 1 &&
+    email.length > 1 &&
+    password.length > 1
+  ) {
     signUpSubmission(name, email, password);
   }
 });
@@ -157,8 +174,9 @@ function signUpSubmission(name, email, password) {
   })
     .then((response) => {
       if (response.status === 409) {
-        fieldIssuesSignUpDiv.innerHTML = "An account with that email already exists. Please use a different email or <a onclick='openLogin()'>login</a>.";
-        shakeButton('signup-submit');
+        fieldIssuesSignUpDiv.innerHTML =
+          "An account with that email already exists. Please use a different email or <a onclick='openLogin()'>login</a>.";
+        shakeButton("signup-submit");
       } else if (!response.ok) {
         throw new Error("An error occurred. Please try again later.");
       }
@@ -197,17 +215,17 @@ loginSubmissionBtn.addEventListener("click", function (event) {
   const email = document.getElementById("login-email").value;
   const rememberMe = document.getElementById("rememberMe").checked;
   if (email.length < 1 || password.length < 1) {
-    fieldIssuesLoginDiv.innerHTML = "Please make sure that you have entered a value for your email and password.";
+    fieldIssuesLoginDiv.innerHTML =
+      "Please make sure that you have entered a value for your email and password.";
     shakeButton(loginSubmissionBtn);
-    console.log("ran into error real")
-  } else {  
+    console.log("ran into error real");
+  } else {
     fieldIssuesLoginDiv.innerHTML = "";
   }
 
   if (fieldIssuesLoginDiv.innerHTML === "") {
     loginSubmission(email, password, rememberMe);
   }
-
 });
 
 function loginSubmission(email, password, rememberMe) {
@@ -228,6 +246,21 @@ function loginSubmission(email, password, rememberMe) {
       if (response.status === 200) {
         // Successful login
         fieldIssuesLoginDiv.innerHTML = "Login successful!";
+        closeLogin();
+
+        // Change the "Log In" button to "Log Out" and hide the "Sign Up" button
+        document.getElementById("loginBtn").style.display = "none";
+        document.getElementById("signupBtn").textContent = "Log Out";
+
+        // Add a click event handler to the "Log Out" button to handle log out
+        document.getElementById("signoutBtn").addEventListener("click", () => {
+          // Perform log out logic here
+          // You may need to make an AJAX request to the server to log the user out
+          // Update the UI as needed (e.g., show the "Log In" button and hide the "Log Out" button)
+          // For example, to change back to "Log In" and hide "Log Out":
+          document.getElementById("signupBtn").style.display = "block";
+          document.getElementById("signoutBtn").style.display = "block";
+        });
       } else if (response.status === 404) {
         // User not found
         fieldIssuesLoginDiv.innerHTML = "User not found";
