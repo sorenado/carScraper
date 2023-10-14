@@ -22,27 +22,6 @@ async function connectToDB() {
   }
 }
 
-const store = new MongoDBStore({
-  uri: dbURL,
-  collection: "sessions",
-});
-
-store.on("error", function (error) {
-  console.log(error);
-});
-
-app.use(
-  session({
-    secret: "your-secret-key",
-    resave: false,
-    saveUninitialized: false,
-    cookie: {
-      maxAge: 3600000, // Session expiration time (1 hour)
-    },
-    store: store, // Use the MongoDBStore here
-  })
-);
-
 app.use(express.json());
 app.use(express.static("public"));
 
@@ -130,7 +109,6 @@ app.get("/addedUsersPage", async (req, res) => {
 app.post("/login-form", async (req, res) => {
   try {
     const { email, password } = req.body;
-    console.log(req.sessionID);
 
     const { db, client } = await connectToDB();
     const userCollection = db.collection("users");
@@ -146,11 +124,6 @@ app.post("/login-form", async (req, res) => {
 
     if (userInfo.password === hashedInputPassword) {
       res.status(200).json({ message: "Password Matched" });
-      req.session.authenticated = true;
-      req.session.user = {
-        email,
-      };
-      console.log(req.session);
     } else {
       res.status(401).json({ message: "Incorrect password" });
     }

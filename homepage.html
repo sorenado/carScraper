@@ -21,9 +21,13 @@
       <a id="title" href="/"><div class="header-title">Car Scraper</div></a>
       <div class="header-sections">
         <a onclick="scrollToElement('about')" class="header-section">About</a>
-        <a onclick="scrollToElement('contact')" class="header-section">Contact</a>
-        <a onclick="openLogin()" class="header-section">Log In</a>
-        <a onclick="openSignUp()" id="signupBtn" class="header-section">Sign Up</a>
+        <a onclick="scrollToElement('contact')" class="header-section"
+          >Contact</a
+        >
+        <a onclick="openLogin()" id="loginBtn" class="header-section">Log In</a>
+        <a onclick="openSignUp()" id="signupBtn" class="header-section"
+          >Sign Up</a
+        >
         <a id="signoutBtn" class="header-section">Sign Out</a>
       </div>
     </div>
@@ -31,7 +35,6 @@
     <div class="login-window">
       <a id="login-exitbtn" onclick="closeLogin()"><button>X</button></a>
       <div class="login-window-content">
-
         <form id="signup-form" action="join-button-form" method="post">
           <h2>Create an Account</h2>
           <input
@@ -59,9 +62,14 @@
             required
           />
           <!-- Specify the type attribute for the button to prevent accidental form submission -->
-          <button id="signup-submit" type="submit" class="submitBtn">Sign Up</button>
+          <button id="signup-submit" type="submit" class="submitBtn">
+            Sign Up
+          </button>
 
-          <h3 class="switchTypeTitle">Already have an account? <a class="switchType" onclick="openLogin()">Login</a></h3>
+          <h3 class="switchTypeTitle">
+            Already have an account?
+            <a class="switchType" onclick="openLogin()">Login</a>
+          </h3>
           <div id="fieldIssuesSignUp"></div>
         </form>
 
@@ -82,14 +90,18 @@
             required
           />
 
-          <input type="checkbox" id="rememberMe">
+          <input type="checkbox" id="rememberMe" />
           <label for="rememberMe">Remember Me</label>
 
-          <button id="login-submit" type="submit" class="submitBtn">Login</button>
+          <button id="login-submit" type="submit" class="submitBtn">
+            Login
+          </button>
 
-          <h3 class="switchTypeTitle">Don't have an account? <a class="switchType" onclick="openSignUp()">Sign Up</a></h3>
+          <h3 class="switchTypeTitle">
+            Don't have an account?
+            <a class="switchType" onclick="openSignUp()">Sign Up</a>
+          </h3>
           <div id="fieldIssuesLoginDiv"></div>
-
         </form>
 
         <div id="verifyPopup">
