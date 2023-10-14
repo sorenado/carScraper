@@ -52,14 +52,14 @@
             required
           />
 
-          <input type="checkbox" id="rememberMe" />
+          <input type="checkbox" id="rememberMe">
           <label for="rememberMe">Remember Me</label>
 
-          <div id="fieldIssuesLogin"></div>
+          <button id="login-submit" type="submit" class="submitBtn">Login</button>
 
-          <button id="login-submit" type="submit" class="submitBtn">
-            Submit
-          </button>
+          <h3 class="switchTypeTitle">Don't have an account? <a class="switchType" onclick="openSignUp()">Sign Up</a></h3>
+          <div id="fieldIssuesLoginDiv"></div>
+
         </form>
 
         <form id="signup-form" action="join-button-form" method="post">
@@ -88,11 +88,11 @@
             name="password"
             required
           />
-          <div id="fieldIssuesSignUp"></div>
           <!-- Specify the type attribute for the button to prevent accidental form submission -->
-          <button id="signup-submit" type="submit" class="submitBtn">
-            Submit
-          </button>
+          <button id="signup-submit" type="submit" class="submitBtn">Sign Up</button>
+
+          <h3 class="switchTypeTitle">Already have an account? <a class="switchType" onclick="openLogin()">Login</a></h3>
+          <div id="fieldIssuesSignUp"></div>
         </form>
         <div id="verifyPopup">
           <h3>
