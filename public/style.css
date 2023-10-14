@@ -10,73 +10,79 @@
 }
 
 .overlay {
-    background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0.5);
 }
 
 body::before {
-    content: "";
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-image: url(https://i.postimg.cc/G2s45Pnq/imageedit-2-2058575291.png);
-    background-repeat: no-repeat;
-    background-size: cover;
-    z-index: -1;
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url(https://i.postimg.cc/G2s45Pnq/imageedit-2-2058575291.png);
+  background-repeat: no-repeat;
+  background-size: cover;
+  z-index: -1;
 }
 
 body {
-    min-height: 100vh;
-    margin: 0;
+  min-height: 100vh;
+  margin: 0;
 }
-
-
 
 /* Header */
 
 .header {
-    width: 40%;
-    background-color: rgba(233, 231, 231, 1);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;    
-    padding: 10px 20px;
-    position: fixed;
-    left: 50%; /* Center the header */
-    transform: translateX(-50%); /* Center the header */
-    border-radius: 15px; /* Add rounded corners */
-    z-index: 1;
-    top: 10px
+  width: 40%;
+  background-color: rgba(233, 231, 231, 1);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  position: fixed;
+  left: 50%; /* Center the header */
+  transform: translateX(-50%); /* Center the header */
+  border-radius: 15px; /* Add rounded corners */
+  z-index: 1;
+  top: 10px;
 }
 
 .header-title {
-    margin: 0;
-    color: #000000;
-    font-size: 25px;
-    font-family: "Alata", sans-serif;
-    margin-right: auto; /* Push to the left */
+  margin: 0;
+  color: #000000;
+  font-size: 25px;
+  font-family: "Alata", sans-serif;
+  margin-right: auto; /* Push to the left */
+  transition: all 0.1s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+#title {
+  text-decoration: none;
 }
 
 .header-sections {
-    display: flex;
-    align-items: center;
-    margin-left: auto; /* Push to the right */
+  display: flex;
+  align-items: center;
+  margin-left: auto; /* Push to the right */
 }
 
 .header-sections a {
-    margin-left: 20px;
-    color: #000000;
-    text-decoration: none;
-    font-size: 20px;
-    font-family: "Alata", sans-serif;
+  margin-left: 30px;
+  color: #000000;
+  text-decoration: none;
+  font-size: 20px;
+  font-family: "Alata", sans-serif;
 }
 
-.header-sections a:hover {
-    text-shadow: 0 4px 5px rgba(39, 63, 122, 0.5);
-    color: #3a83bb;
-    cursor: pointer;
-    transition: color 0.2s ease-in-out, text-shadow 0.2s ease-in-out;
+.header-sections a:hover,
+.header-title:hover {
+  text-shadow: 0 1.5px 2px rgba(39, 63, 122, 0.5);
+  color: #3a83bb;
+  cursor: pointer;
+  transition:
+    color 0.05s ease-in-out,
+    text-shadow 0.05s ease-in-out;
 }
 
 #signupBtn {
@@ -94,7 +100,7 @@ body {
   text-align: center;
   text-decoration: none #0d172a solid;
   text-decoration-thickness: auto;
-  transition: all .1s cubic-bezier(.4, 0, .2, 1);
+  transition: all 0.1s cubic-bezier(0.4, 0, 0.2, 1);
   box-shadow: 0px 1px 2px rgba(166, 175, 195, 0.25);
   user-select: none;
   -webkit-user-select: none;
@@ -102,43 +108,44 @@ body {
 }
 
 #signupBtn:hover {
-  background-color: #1e293b;
+  background-color: #3a83bb;
   color: #fff;
+  box-shadow: 0 1.5px 4px rgba(39, 63, 122, 0.5);
 }
 
 #signoutBtn {
-    display: none;
+  display: none;
 }
 
 /* Homepage */
 
 .homepage-title {
-    text-align: center;
-    font-size: 45px;
-    letter-spacing: 0.06em;
-    font-family: "Alata", sans-serif;
-    margin-top: 90px;
-    margin-bottom: 55px;
+  text-align: center;
+  font-size: 45px;
+  letter-spacing: 0.06em;
+  font-family: "Alata", sans-serif;
+  margin-top: 90px;
+  margin-bottom: 55px;
 }
 
 .homepage-subtitle {
-    text-align: center;
-    font-size: 33px;
+  text-align: center;
+  font-size: 33px;
 }
 
 .homepage-header {
-    text-align: center;
-    font-size: 22px;
+  text-align: center;
+  font-size: 22px;
 }
 
 .homepage-paragraph {
-    margin: 0 auto;
-    margin-left: 100px;
-    margin-right: 100px;
-    margin-bottom: 250px;
-    text-align: justify;
-    font-size: 20px;
-    line-height: 2em;
+  margin: 0 auto;
+  margin-left: 100px;
+  margin-right: 100px;
+  margin-bottom: 250px;
+  text-align: justify;
+  font-size: 20px;
+  line-height: 2em;
 }
 
 /* Login/Signup Panels */
@@ -194,16 +201,16 @@ body {
 }
 
 .login-window {
-    display: none; 
-    width: 380px;
-    height: 480px;
-    position: absolute; 
-    top: 50%; 
-    left: 50%; 
-    transform: translate(-50%, -50%);
-    background: #fff;
-    padding: 5px;
-    z-index: 1;
+  display: none;
+  width: 380px;
+  height: 480px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #fff;
+  padding: 5px;
+  z-index: 1;
 }
 
 #login-exitbtn {
