@@ -2,8 +2,9 @@
 
 let loginForm = document.getElementById("login-form");
 let signupForm = document.getElementById("signup-form");
-const fieldIssuesSignUpDiv = document.getElementById("fieldIssuesSignUp");
-const fieldIssuesLoginDiv = document.getElementById("fieldIssuesLogin");
+let fieldIssuesSignUpDiv = document.getElementById("fieldIssuesSignUp");
+let fieldIssuesLoginDiv = document.getElementById("fieldIssuesLoginDiv");
+
 
 function toggleForm() {
   loginForm.style.display =
@@ -22,7 +23,7 @@ function applyOverlay() {
 
   if (!body.classList.contains('overlay')) {
     body.classList.add('overlay');
-    header.classList.add('overlay');
+    // header.classList.add('overlay');
   }
 }
 
@@ -32,7 +33,7 @@ function removeOverlay() {
 
   if (body.classList.contains('overlay')) {
     body.classList.remove('overlay');
-    header.classList.remove('overlay');
+    // header.classList.remove('overlay');
   }
 }
 
@@ -103,15 +104,13 @@ signUpSubmissionBtn.addEventListener("click", function (event) {
   const password = document.getElementById("signup-form-password").value;
 
   if (name.length < 1 || email.length < 1 || password.length < 1) {
-    fieldIssuesDiv.innerHTML = "Please make sure that you have entered a value for your name, email, and password."
+    fieldIssuesSignUpDiv.innerHTML = "Please make sure that you have entered a value for your name, email, and password."
     shakeButton('signup-submit');
+  } else {
+    fieldIssuesSignUpDiv.innerHTML = ""
   }
 
-  if (name.length > 1 && email.length > 1 && password.length > 1) {
-    fieldIssuesDiv.innerHTML = ""
-  }
-
-  if (fieldIssuesSignUpDiv.innerHTML === "") {
+  if (fieldIssuesSignUpDiv.innerHTML === "" && name.length > 1 && email.length > 1 && password.length > 1) {
     signUpSubmission(name, email, password);
   }
 });
@@ -135,9 +134,8 @@ function signUpSubmission(name, email, password) {
   })
     .then((response) => {
       if (response.status === 409) {
-        fieldIssuesDiv.innerHTML = "An account with that email already exists. Please use a different email or <a onclick='openLogin()'>login</a>.";
+        fieldIssuesSignUpDiv.innerHTML = "An account with that email already exists. Please use a different email or <a onclick='openLogin()'>login</a>.";
         shakeButton('signup-submit');
-        return Promise.reject(new Error("Account already exists"));
       } else if (!response.ok) {
         throw new Error("An error occurred. Please try again later.");
       }
@@ -176,20 +174,17 @@ loginSubmissionBtn.addEventListener("click", function (event) {
   const email = document.getElementById("login-email").value;
   const rememberMe = document.getElementById("rememberMe").checked;
   if (email.length < 1 || password.length < 1) {
-    fieldIssuesLoginDiv.innerHTML =
-      "Please make sure that you have entered a value for your email and password.";
-    console.log("a field is empty");
-  }
-
-  if (email.length > 1 && password.length > 1) {
+    fieldIssuesLoginDiv.innerHTML = "Please make sure that you have entered a value for your email and password.";
+    shakeButton(loginSubmissionBtn);
+    console.log("ran into error real")
+  } else {  
     fieldIssuesLoginDiv.innerHTML = "";
-    console.log("field issues div made empty all fields are filled");
   }
 
   if (fieldIssuesLoginDiv.innerHTML === "") {
     loginSubmission(email, password, rememberMe);
-    console.log("field issues div is empty, attempting to send submission");
   }
+
 });
 
 function loginSubmission(email, password, rememberMe) {
@@ -198,7 +193,6 @@ function loginSubmission(email, password, rememberMe) {
     password: password,
     rememberMe: rememberMe,
   };
-
 
   fetch("/login-form", {
     method: "POST",
