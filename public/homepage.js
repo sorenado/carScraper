@@ -39,6 +39,23 @@ function scrollToElement(elementId) {
   }
 }
 
+function enableScroll() {
+  const scrollPosition = parseInt(document.body.style.top, 10);
+
+  document.body.style.position = '';
+  document.body.style.top = '';
+
+  window.scrollTo(0, scrollPosition);
+}
+
+function disableScroll() {
+  const scrollPosition = window.pageYOffset || document.documentElement.scrollTop;
+
+  document.body.style.position = 'fixed';
+  document.body.style.top = `-${scrollPosition}px`;
+}
+
+
 function applyOverlay() {
   const body = document.querySelector('body');
   const header = document.querySelector('header');
@@ -69,6 +86,7 @@ function openLogin() {
   document.getElementsByClassName("login-window")[0].style.top = scrollTop + window.innerHeight / 2 + "px";
 
   applyOverlay();
+  disableScroll();
 }
 
 function openSignUp() {
@@ -81,12 +99,14 @@ function openSignUp() {
   document.getElementsByClassName("login-window")[0].style.top = scrollTop + window.innerHeight / 2 + "px";
 
   applyOverlay();
+  disableScroll();
 }
 
 function closeLogin() {
   document.getElementsByClassName("login-window")[0].style.display = "none";
 
   removeOverlay();
+  enableScroll();
 }
 
 function shakeButton(btn) {
