@@ -49,10 +49,53 @@ function enableScroll() {
 }
 
 function disableScroll() {
-  const scrollPosition = window.pageYOffset || document.documentElement.scrollTop;
+  const scrollPosition = window.scrollY || document.documentElement.scrollTop;
 
   document.body.style.position = 'fixed';
   document.body.style.top = `-${scrollPosition}px`;
+}
+
+let buttonInfo = [];
+
+function disableHeaderButtons() {
+  const headerSections = document.querySelector('.header-sections');
+  const anchorElements = headerSections.querySelectorAll('a');
+  const headerTitle = document.getElementById('title');
+  const headerTitleDiv = document.querySelector('.header-title');
+
+  anchorElements.forEach((anchor) => {
+    buttonInfo.push({
+      element: anchor,
+      disabled: anchor.classList.add('disabled'),
+      onclick: anchor.onclick
+    });
+    
+    anchor.onclick = null;
+  });
+
+  headerTitleDiv.classList.add('disabled'),
+  headerTitle.removeAttribute('href');
+}
+
+function enableHeaderButtons() {
+  const headerSections = document.querySelector('.header-sections');
+  const headerTitle = document.getElementById('title');
+  const headerTitleDiv = document.querySelector('.header-title');
+  const anchorElements = headerSections.querySelectorAll('a');
+
+
+  anchorElements.forEach((anchor) => {
+    anchor.classList.remove('disabled');
+  });
+
+  buttonInfo.forEach(button => {
+    button.element.onclick = button.onclick;
+  });
+
+  buttonInfo = [];
+
+  headerTitleDiv.classList.remove('disabled');
+  headerTitle.setAttribute('href', '/');
 }
 
 
@@ -60,9 +103,11 @@ function applyOverlay() {
   const body = document.querySelector('body');
   const header = document.querySelector('header');
 
-  if (!body.classList.contains('overlay')) {
+  if (body) {
     body.classList.add('overlay');
-    // header.classList.add('overlay');
+  }
+  if (header) {
+    header.classList.add('overlayHeader');
   }
 }
 
@@ -70,9 +115,11 @@ function removeOverlay() {
   const body = document.querySelector('body');
   const header = document.querySelector('header');
 
-  if (body.classList.contains('overlay')) {
+  if (body) {
     body.classList.remove('overlay');
-    // header.classList.remove('overlay');
+  }
+  if (header) {
+    header.classList.remove('overlayHeader');
   }
 }
 
@@ -86,6 +133,7 @@ function openLogin() {
   document.getElementsByClassName("login-window")[0].style.top = scrollTop + window.innerHeight / 2 + "px";
 
   applyOverlay();
+  disableHeaderButtons()
   disableScroll();
 }
 
@@ -98,6 +146,7 @@ function openSignUp() {
   const scrollTop = window.scrollY || document.documentElement.scrollTop;
   document.getElementsByClassName("login-window")[0].style.top = scrollTop + window.innerHeight / 2 + "px";
 
+  disableHeaderButtons()
   applyOverlay();
   disableScroll();
 }
@@ -107,6 +156,7 @@ function closeLogin() {
 
   removeOverlay();
   enableScroll();
+  enableHeaderButtons();
 }
 
 function shakeButton(btn) {
@@ -242,4 +292,12 @@ function loginSubmission(email, password, rememberMe) {
       fieldIssuesLoginDiv.innerHTML =
         "An error occurred. Please try again later.";
     });
+}
+
+window.onclick = (event) => {
+  if (!event.target.matches('.login-window') && !event.target.matches('.header-section')) {
+    if (document.querySelector('.login-window').style.display === 'block') {
+      closeLogin();
+    }
+  }
 }
