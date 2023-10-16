@@ -124,6 +124,7 @@ app.post("/login-form", async (req, res) => {
 
     if (userInfo.password === hashedInputPassword) {
       res.status(200).json({ message: "Password Matched" });
+      console.log("Logged In");
     } else {
       res.status(401).json({ message: "Incorrect password" });
     }
