@@ -30,7 +30,6 @@ app.use(
     },
   })
 );
-
 async function connectToDB() {
   const client = new MongoClient(dbURL);
   try {

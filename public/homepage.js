@@ -95,7 +95,9 @@ function openLogin() {
     scrollTop + window.innerHeight / 2 + "px";
 
   applyOverlay();
+  disableHeaderButtons();
   disableScroll();
+  clearLogin();
 }
 
 function openSignUp() {
@@ -108,8 +110,10 @@ function openSignUp() {
   document.getElementsByClassName("login-window")[0].style.top =
     scrollTop + window.innerHeight / 2 + "px";
 
+  disableHeaderButtons();
   applyOverlay();
   disableScroll();
+  clearSignup();
 }
 
 function closeLogin() {
@@ -117,6 +121,7 @@ function closeLogin() {
 
   removeOverlay();
   enableScroll();
+  enableHeaderButtons();
 }
 
 function shakeButton(btn) {
@@ -245,7 +250,6 @@ function loginSubmission(email, password, rememberMe) {
       if (response.status === 200) {
         // Successful login
         fieldIssuesLoginDiv.innerHTML = "Login successful!";
-        closeLogin();
       } else if (response.status === 404) {
         // User not found
         fieldIssuesLoginDiv.innerHTML = "User not found";
@@ -301,3 +305,15 @@ function updateLoginButtons() {
 
 // Call the updateLoginButtons function when the page loads
 window.onload = updateLoginButtons;
+
+window.onclick = (event) => {
+  if (
+    !event.target.matches(".login-window") &&
+    !event.target.closest(".login-window") &&
+    !event.target.matches(".header-section")
+  ) {
+    if (document.querySelector(".login-window").style.display === "block") {
+      closeLogin();
+    }
+  }
+};
