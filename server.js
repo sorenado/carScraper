@@ -1,7 +1,11 @@
 const express = require("express");
 const { MongoClient, ObjectId } = require("mongodb");
 const crypto = require("crypto");
-const { sendConfirmation, hashStringToBase64 } = require("./helperFunctions");
+const {
+  sendConfirmation,
+  hashStringToBase64,
+  checkUserAuthentication,
+} = require("./helperFunctions");
 const session = require("express-session");
 const MongoDBStore = require("connect-mongodb-session")(session);
 
@@ -10,20 +14,37 @@ const port = 8080;
 const dbURL =
   "mongodb://127.0.0.1:27017/?directConnection=true&serverSelectionTimeoutMS=2000&appName=mongosh+2.0.1";
 
+const store = new MongoDBStore({
+  uri: dbURL, // MongoDB connection URL
+  collection: "sessions", // Collection to store sessions
+});
+
+app.use(
+  session({
+    secret: "your-secret-key",
+    resave: false,
+    saveUninitialized: true,
+    store: store,
+    cookie: {
+      maxAge: 30 * 24 * 60 * 60 * 1000, // Session will last for 30 days
+    },
+  })
+);
 async function connectToDB() {
   const client = new MongoClient(dbURL);
   try {
     await client.connect();
-    console.log("Connected To Database");
     const db = client.db("car_scraper");
     return { db, client };
   } catch (err) {
     console.error(err);
+    console.log("Not connected to db");
   }
 }
 
 app.use(express.json());
 app.use(express.static("public"));
+app.use(checkUserAuthentication);
 
 app.get("/", (req, res) => {
   res.sendFile(__dirname + "/homepage.html");
@@ -123,7 +144,14 @@ app.post("/login-form", async (req, res) => {
     const hashedInputPassword = await hashStringToBase64(password);
 
     if (userInfo.password === hashedInputPassword) {
-      res.status(200).json({ message: "Password Matched" });
+      // Create a session and store user information in the session
+      req.session.user = {
+        id: userInfo._id, // Assuming you have a unique user ID
+        email: userInfo.email,
+        // Add other user-related data as needed
+      };
+
+      res.status(200).json({ message: "Login successful" });
       console.log("Logged In");
     } else {
       res.status(401).json({ message: "Incorrect password" });
@@ -132,6 +160,14 @@ app.post("/login-form", async (req, res) => {
     console.error(error);
     res.status(500).json({ message: "Internal server error" });
   }
+});
+
+// Add this route to your server.js
+app.get("/check-login-status", (req, res) => {
+  // Check if the user is logged in based on the session
+  const isLoggedIn = req.session.user ? true : false;
+
+  res.json({ isLoggedIn });
 });
 
 app.listen(port, () => console.log(`Successfully running on Port: ${port}`));

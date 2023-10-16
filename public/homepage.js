@@ -1,5 +1,4 @@
-// Handle toggling of login/signup fourms
-
+// Handle toggling of login/signup forms
 let loginForm = document.getElementById("login-form");
 let signupForm = document.getElementById("signup-form");
 let fieldIssuesSignUpDiv = document.getElementById("fieldIssuesSignUp");
@@ -58,64 +57,20 @@ function enableScroll() {
 }
 
 function disableScroll() {
-  const scrollPosition = window.scrollY || document.documentElement.scrollTop;
+  const scrollPosition =
+    window.pageYOffset || document.documentElement.scrollTop;
 
   document.body.style.position = "fixed";
   document.body.style.top = `-${scrollPosition}px`;
-}
-
-let buttonInfo = [];
-
-function disableHeaderButtons() {
-  const headerSections = document.querySelector('.header-sections');
-  const anchorElements = headerSections.querySelectorAll('a');
-  const headerTitle = document.getElementById('title');
-  const headerTitleDiv = document.querySelector('.header-title');
-
-  anchorElements.forEach((anchor) => {
-    buttonInfo.push({
-      element: anchor,
-      disabled: anchor.classList.add('disabled'),
-      onclick: anchor.onclick
-    });
-    
-    anchor.onclick = null;
-  });
-
-  headerTitleDiv.classList.add('disabled'),
-  headerTitle.removeAttribute('href');
-}
-
-function enableHeaderButtons() {
-  const headerSections = document.querySelector('.header-sections');
-  const headerTitle = document.getElementById('title');
-  const headerTitleDiv = document.querySelector('.header-title');
-  const anchorElements = headerSections.querySelectorAll('a');
-
-
-  anchorElements.forEach((anchor) => {
-    anchor.classList.remove('disabled');
-  });
-
-  buttonInfo.forEach(button => {
-    button.element.onclick = button.onclick;
-  });
-
-  buttonInfo = [];
-
-  headerTitleDiv.classList.remove('disabled');
-  headerTitle.setAttribute('href', '/');
 }
 
 function applyOverlay() {
   const body = document.querySelector("body");
   const header = document.querySelector("header");
 
-  if (body) {
-    body.classList.add('overlay');
-  }
-  if (header) {
-    header.classList.add('overlayHeader');
+  if (!body.classList.contains("overlay")) {
+    body.classList.add("overlay");
+    // header.classList.add('overlay');
   }
 }
 
@@ -123,37 +78,9 @@ function removeOverlay() {
   const body = document.querySelector("body");
   const header = document.querySelector("header");
 
-  if (body) {
-    body.classList.remove('overlay');
-  }
-  if (header) {
-    header.classList.remove('overlayHeader');
-  }
-}
-
-function clearLogin() {
-  const form = document.getElementById('login-form');
-  const inputs = form.getElementsByTagName('input');
-
-  for (let i = 0; i < inputs.length; i++) {
-    if (inputs[i].type !== 'checkbox') {
-      inputs[i].value = '';
-    } else {
-      inputs[i].checked = false;
-    }
-  }
-}
-
-function clearSignup() {
-  const form = document.getElementById('signup-form');
-  const inputs = form.getElementsByTagName('input');
-
-  for (let i = 0; i < inputs.length; i++) {
-    if (inputs[i].type !== 'checkbox') {
-      inputs[i].value = '';
-    } else {
-      inputs[i].checked = false;
-    }
+  if (body.classList.contains("overlay")) {
+    body.classList.remove("overlay");
+    // header.classList.remove('overlay');
   }
 }
 
@@ -168,7 +95,7 @@ function openLogin() {
     scrollTop + window.innerHeight / 2 + "px";
 
   applyOverlay();
-  disableHeaderButtons()
+  disableHeaderButtons();
   disableScroll();
   clearLogin();
 }
@@ -183,7 +110,7 @@ function openSignUp() {
   document.getElementsByClassName("login-window")[0].style.top =
     scrollTop + window.innerHeight / 2 + "px";
 
-  disableHeaderButtons()
+  disableHeaderButtons();
   applyOverlay();
   disableScroll();
   clearSignup();
@@ -323,21 +250,6 @@ function loginSubmission(email, password, rememberMe) {
       if (response.status === 200) {
         // Successful login
         fieldIssuesLoginDiv.innerHTML = "Login successful!";
-        closeLogin();
-
-        // Change the "Log In" button to "Log Out" and hide the "Sign Up" button
-        document.getElementById("loginBtn").style.display = "none";
-        document.getElementById("signupBtn").textContent = "Log Out";
-
-        // Add a click event handler to the "Log Out" button to handle log out
-        document.getElementById("signoutBtn").addEventListener("click", () => {
-          // Perform log out logic here
-          // You may need to make an AJAX request to the server to log the user out
-          // Update the UI as needed (e.g., show the "Log In" button and hide the "Log Out" button)
-          // For example, to change back to "Log In" and hide "Log Out":
-          document.getElementById("signupBtn").style.display = "block";
-          document.getElementById("signoutBtn").style.display = "block";
-        });
       } else if (response.status === 404) {
         // User not found
         fieldIssuesLoginDiv.innerHTML = "User not found";
@@ -354,10 +266,54 @@ function loginSubmission(email, password, rememberMe) {
     });
 }
 
+// Function to create a "Log Out" button
+function createLogoutButton() {
+  const logoutBtn = document.createElement("a");
+  logoutBtn.textContent = "Log Out";
+  logoutBtn.className = "header-section";
+  logoutBtn.onclick = function () {};
+
+  // Append the "Log Out" button to the header
+  const headerSections = document.querySelector(".header-sections");
+  headerSections.appendChild(logoutBtn);
+}
+
+// Function to update login/signup buttons
+function updateLoginButtons() {
+  const loginBtn = document.getElementById("loginBtn");
+  const signupBtn = document.getElementById("signupBtn");
+
+  // Send a request to the server to check if the user is logged in
+  fetch("/check-login-status")
+    .then((response) => response.json())
+    .then((data) => {
+      const { isLoggedIn } = data;
+
+      if (isLoggedIn) {
+        loginBtn.style.display = "none"; // Hide "Log In" button
+        signupBtn.style.display = "none"; // Hide "Sign Up" button
+        createLogoutButton(); // Create and append "Log Out" button
+      } else {
+        loginBtn.style.display = "block"; // Show "Log In" button
+        signupBtn.style.display = "block"; // Show "Sign Up" button
+      }
+    })
+    .catch((error) => {
+      console.error("Error checking login status:", error);
+    });
+}
+
+// Call the updateLoginButtons function when the page loads
+window.onload = updateLoginButtons;
+
 window.onclick = (event) => {
-  if (!event.target.matches('.login-window') && !event.target.closest('.login-window') && !event.target.matches('.header-section')) {
-    if (document.querySelector('.login-window').style.display === 'block') {
+  if (
+    !event.target.matches(".login-window") &&
+    !event.target.closest(".login-window") &&
+    !event.target.matches(".header-section")
+  ) {
+    if (document.querySelector(".login-window").style.display === "block") {
       closeLogin();
     }
   }
-}
+};
