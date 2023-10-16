@@ -40,4 +40,21 @@ async function hashStringToBase64(input) {
   return hashBase64;
 }
 
-module.exports = { sendConfirmation, hashStringToBase64 };
+function checkUserAuthentication(req, res, next) {
+  if (req.session && req.session.user) {
+    // User is logged in
+    console.log("User is logged in");
+    console.log("User ID: " + req.session.user.id);
+    console.log("User Email: " + req.session.user.email);
+  } else {
+    // User is not logged in
+    console.log("User is not logged in");
+  }
+  next();
+}
+
+module.exports = {
+  sendConfirmation,
+  hashStringToBase64,
+  checkUserAuthentication,
+};
