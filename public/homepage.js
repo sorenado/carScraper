@@ -131,6 +131,32 @@ function removeOverlay() {
   }
 }
 
+function clearLogin() {
+  const form = document.getElementById('login-form');
+  const inputs = form.getElementsByTagName('input');
+
+  for (let i = 0; i < inputs.length; i++) {
+    if (inputs[i].type !== 'checkbox') {
+      inputs[i].value = '';
+    } else {
+      inputs[i].checked = false;
+    }
+  }
+}
+
+function clearSignup() {
+  const form = document.getElementById('signup-form');
+  const inputs = form.getElementsByTagName('input');
+
+  for (let i = 0; i < inputs.length; i++) {
+    if (inputs[i].type !== 'checkbox') {
+      inputs[i].value = '';
+    } else {
+      inputs[i].checked = false;
+    }
+  }
+}
+
 function openLogin() {
   document.getElementsByClassName("login-window")[0].style.display = "block";
   document.getElementById("login-form").style.display = "block";
@@ -144,6 +170,7 @@ function openLogin() {
   applyOverlay();
   disableHeaderButtons()
   disableScroll();
+  clearLogin();
 }
 
 function openSignUp() {
@@ -159,6 +186,7 @@ function openSignUp() {
   disableHeaderButtons()
   applyOverlay();
   disableScroll();
+  clearSignup();
 }
 
 function closeLogin() {
