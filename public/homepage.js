@@ -327,7 +327,7 @@ function loginSubmission(email, password, rememberMe) {
 }
 
 window.onclick = (event) => {
-  if (!event.target.matches('.login-window') && !event.target.matches('.header-section')) {
+  if (!event.target.matches('.login-window') && !event.target.closest('.login-window') && !event.target.matches('.header-section')) {
     if (document.querySelector('.login-window').style.display === 'block') {
       closeLogin();
     }
