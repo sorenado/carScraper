@@ -110,8 +110,8 @@ function openSignUp() {
   document.getElementsByClassName("login-window")[0].style.top =
     scrollTop + window.innerHeight / 2 + "px";
 
-  applyOverlay();    
   disableHeaderButtons();
+  applyOverlay();
   disableScroll();
   clearSignup();
 }

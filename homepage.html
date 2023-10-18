@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <!-- Document Information -->
@@ -11,23 +11,16 @@
     <!-- Font Information -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Alata&family=Poppins&display=swap"
-      rel="stylesheet"
-    />
+    <link href="https://fonts.googleapis.com/css2?family=Alata&family=Poppins&display=swap" rel="stylesheet" />
   </head>
   <body>
     <header class="header">
       <a id="title" href="/"><div class="header-title">Car Scraper</div></a>
-      <div class="header-sections">
+      <div id="header-section" class="header-sections">
         <a onclick="scrollToElement('about')" class="header-section">About</a>
-        <a onclick="scrollToElement('contact')" class="header-section"
-          >Contact</a
-        >
+        <a onclick="scrollToElement('contact')" class="header-section">Contact</a>
         <a onclick="openLogin()" id="loginBtn" class="header-section">Log In</a>
-        <a onclick="openSignUp()" id="signupBtn" class="header-section"
-          >Sign Up</a
-        >
+        <a onclick="openSignUp()" id="signupBtn" class="header-section">Sign Up</a>
         <a id="signoutBtn" class="header-section">Sign Out</a>
       </div>
     </header>
@@ -37,34 +30,14 @@
       <div class="login-window-content">
         <form id="signup-form" action="join-button-form" method="post">
           <h2>Create an Account</h2>
-          <input
-            id="signup-form-name"
-            type="text"
-            name="name"
-            placeholder="Name"
-            required
-          />
+          <input id="signup-form-name" type="text" name="name" placeholder="Name" required />
 
-          <input
-            id="signup-form-email"
-            type="email"
-            placeholder="Email"
-            name="email"
-            required
-          />
+          <input id="signup-form-email" type="email" placeholder="Email" name="email" required />
 
           <!-- Make sure to include a name attribute for the password field -->
-          <input
-            id="signup-form-password"
-            type="password"
-            placeholder="Password"
-            name="password"
-            required
-          />
+          <input id="signup-form-password" type="password" placeholder="Password" name="password" required />
           <!-- Specify the type attribute for the button to prevent accidental form submission -->
-          <button id="signup-submit" type="submit" class="submitBtn">
-            Sign Up
-          </button>
+          <button id="signup-submit" type="submit" class="submitBtn">Sign Up</button>
 
           <h3 class="switchTypeTitle">
             Already have an account?
@@ -75,27 +48,13 @@
 
         <form id="login-form" action="login-form" method="post">
           <h2>Login</h2>
-          <input
-            id="login-email"
-            class="login-input"
-            type="email"
-            placeholder="Email"
-            required
-          />
-          <input
-            id="login-password"
-            class="login-input"
-            type="password"
-            placeholder="Password"
-            required
-          />
+          <input id="login-email" class="login-input" type="email" placeholder="Email" required />
+          <input id="login-password" class="login-input" type="password" placeholder="Password" required />
 
           <input type="checkbox" id="rememberMe" />
           <label for="rememberMe">Remember Me</label>
 
-          <button id="login-submit" type="submit" class="submitBtn">
-            Login
-          </button>
+          <button id="login-submit" type="submit" class="submitBtn">Login</button>
 
           <h3 class="switchTypeTitle">
             Don't have an account?
@@ -105,10 +64,7 @@
         </form>
 
         <div id="verifyPopup">
-          <h3>
-            Please check your email to complete verifying your account. You
-            should recieve a link shortly.
-          </h3>
+          <h3>Please check your email to complete verifying your account. You should recieve a link shortly.</h3>
           <h5>This tab can be safely closed.</h5>
         </div>
       </div>
@@ -119,27 +75,23 @@
     <h2 id="about" class="homepage-subtitle">About Us</h2>
     <h3 class="homepage-header">What is Car Scraper?</h3>
     <p class="homepage-paragraph">
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-      tempor incididunt ut labore et dolore magna aliqua. Dictumst quisque
-      sagittis purus sit amet volutpat consequat mauris nunc. Tristique nulla
-      aliquet enim tortor at auctor. Ultricies integer quis auctor elit sed
-      vulputate mi. Hendrerit dolor magna eget est lorem ipsum dolor. Natoque
-      penatibus et magnis dis. Etiam erat velit scelerisque in. Posuere morbi
-      leo urna molestie at elementum eu facilisis. Id interdum velit laoreet id
-      donec ultrices tincidunt. Donec adipiscing tristique risus nec.
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore
+      magna aliqua. Dictumst quisque sagittis purus sit amet volutpat consequat mauris nunc. Tristique nulla aliquet
+      enim tortor at auctor. Ultricies integer quis auctor elit sed vulputate mi. Hendrerit dolor magna eget est lorem
+      ipsum dolor. Natoque penatibus et magnis dis. Etiam erat velit scelerisque in. Posuere morbi leo urna molestie at
+      elementum eu facilisis. Id interdum velit laoreet id donec ultrices tincidunt. Donec adipiscing tristique risus
+      nec.
     </p>
 
     <h2 id="contact" class="homepage-subtitle">Contact Us</h2>
     <h3 class="homepage-header">Questions or Concerns?</h3>
     <p class="homepage-paragraph">
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-      tempor incididunt ut labore et dolore magna aliqua. Dictumst quisque
-      sagittis purus sit amet volutpat consequat mauris nunc. Tristique nulla
-      aliquet enim tortor at auctor. Ultricies integer quis auctor elit sed
-      vulputate mi. Hendrerit dolor magna eget est lorem ipsum dolor. Natoque
-      penatibus et magnis dis. Etiam erat velit scelerisque in. Posuere morbi
-      leo urna molestie at elementum eu facilisis. Id interdum velit laoreet id
-      donec ultrices tincidunt. Donec adipiscing tristique risus nec.
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore
+      magna aliqua. Dictumst quisque sagittis purus sit amet volutpat consequat mauris nunc. Tristique nulla aliquet
+      enim tortor at auctor. Ultricies integer quis auctor elit sed vulputate mi. Hendrerit dolor magna eget est lorem
+      ipsum dolor. Natoque penatibus et magnis dis. Etiam erat velit scelerisque in. Posuere morbi leo urna molestie at
+      elementum eu facilisis. Id interdum velit laoreet id donec ultrices tincidunt. Donec adipiscing tristique risus
+      nec.
     </p>
 
     <script src="homepage.js"></script>
