@@ -1,18 +1,13 @@
 const express = require('express');
 const { MongoClient, ObjectId } = require('mongodb');
 const crypto = require('crypto');
-const {
-  sendConfirmation,
-  hashStringToBase64,
-  checkUserAuthentication
-} = require('./helperFunctions');
+const { sendConfirmation, hashStringToBase64, checkUserAuthentication } = require('./helperFunctions');
 const session = require('express-session');
 const MongoDBStore = require('connect-mongodb-session')(session);
 
 const app = express();
 const port = 8080;
-const dbURL =
-  'mongodb://127.0.0.1:27017/?directConnection=true&serverSelectionTimeoutMS=2000&appName=mongosh+2.0.1';
+const dbURL = 'mongodb://127.0.0.1:27017/?directConnection=true&serverSelectionTimeoutMS=2000&appName=mongosh+2.0.1';
 
 const store = new MongoDBStore({
   uri: dbURL, // MongoDB connection URL
@@ -82,7 +77,7 @@ app.post('/join-button-form', async (req, res) => {
     });
 
     if (inputtedPendingUser) {
-      sendConfirmation(email, result.insertedId).catch((error) => {
+      sendConfirmation(email, result.insertedId).catch(error => {
         res.sendStatus(500);
         return; // Exit the function on error
       });
@@ -114,9 +109,7 @@ app.get('/addedUsersPage', async (req, res) => {
 
     if (deletePendingUser.deletedCount === 1) {
       res.status(200).sendFile(__dirname + '/addedUsersPage.html');
-      console.log(
-        'Everything worked correctly in making the user and adding to the database'
-      );
+      console.log('Everything worked correctly in making the user and adding to the database');
     } else {
       res.status(500).sendFile(__dirname + '/addedUsersPage.html');
       console.log('Deleted count was not 1 ');
@@ -168,6 +161,17 @@ app.get('/check-login-status', (req, res) => {
   const isLoggedIn = req.session.user ? true : false;
 
   res.json({ isLoggedIn });
+});
+
+app.get('/logout', (req, res) => {
+  req.session.destroy(err => {
+    if (err) {
+      console.error('Error destroying session:', err);
+      res.sendStatus(500); // Handle error gracefully
+    } else {
+      res.sendStatus(200); // Session destroyed successfully
+    }
+  });
 });
 
 app.listen(port, () => console.log(`Successfully running on Port: ${port}`));
