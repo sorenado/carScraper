@@ -142,7 +142,6 @@ signUpSubmissionBtn.addEventListener('click', function (event) {
 });
 
 function signUpSubmission(name, email, password) {
-  console.log('ran function ');
   // Create a data object to send to the server
   const user = {
     name: name,
@@ -199,7 +198,6 @@ loginSubmissionBtn.addEventListener('click', function (event) {
 
   const password = document.getElementById('login-password').value;
   const email = document.getElementById('login-email').value;
-  const rememberMe = document.getElementById('rememberMe').checked;
   if (email.length < 1 || password.length < 1) {
     fieldIssuesLoginDiv.innerHTML = 'Please make sure that you have entered a value for your email and password.';
     shakeButton(loginSubmissionBtn);
@@ -209,15 +207,14 @@ loginSubmissionBtn.addEventListener('click', function (event) {
   }
 
   if (fieldIssuesLoginDiv.innerHTML === '') {
-    loginSubmission(email, password, rememberMe);
+    loginSubmission(email, password);
   }
 });
 
-function loginSubmission(email, password, rememberMe) {
+function loginSubmission(email, password) {
   const data = {
     email: email,
-    password: password,
-    rememberMe: rememberMe
+    password: password
   };
 
   fetch('/login-form', {
@@ -231,6 +228,10 @@ function loginSubmission(email, password, rememberMe) {
       if (response.status === 200) {
         // Successful login
         fieldIssuesLoginDiv.innerHTML = 'Login successful!';
+        closeLogin();
+        console.log('Before reloading the page');
+        location.reload();
+        console.log('After reloading the page');
       } else if (response.status === 404) {
         // User not found
         fieldIssuesLoginDiv.innerHTML = 'User not found';
