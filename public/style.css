@@ -19,7 +19,7 @@
   z-index: 15; 
 }
 
-body::before {
+body:before {
   content: "";
   position: fixed;
   top: 0;
@@ -231,7 +231,7 @@ header {
   overflow: hidden; 
 }
 
-input  {
+input {
   border: none;
   width: 100%;
   border-bottom: 1px solid rgb(30, 30, 30);
